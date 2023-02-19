@@ -22,7 +22,7 @@ FUNCTION main()
     x = []
     FOR i = 0 TO 5
         reallyCool("Enter a number:")
-        number = input()
+        number = int(input())
         x.push(number)
     NEXT i
     reallyCool(bubbleSort(x))

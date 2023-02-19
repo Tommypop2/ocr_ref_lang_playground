@@ -121,7 +121,9 @@ export function Result(props: ResultProps) {
           type="text"
           placeholder="Input"
         />{" "}
-        <div class={`h-4 w-4 ${needsInput() ? "bg-light-50" : ""}`}></div>
+        <Show when={needsInput()}>
+          <div class={`h-4 w-full animate-pulse`}>Program requires input</div>
+        </Show>
       </div>
     </div>
   );

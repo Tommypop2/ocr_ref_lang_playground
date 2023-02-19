@@ -3,6 +3,7 @@ FUNCTION reallyCool(x)
 END FUNCTION
 
 FUNCTION main()
+    yes = input()
     x = 0
     FOR i = 0 TO 9
         FOR y = 0 TO 10

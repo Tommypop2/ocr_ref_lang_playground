@@ -1,9 +1,6 @@
-function print(data) {
-  const evt = new CustomEvent("print_event", {
-    detail: data,
-  });
-  window.dispatchEvent(evt);
+async function print(data) {
+  $global.log(data);
 }
-function input() {
-  window.addEventListener("input_event", (evt) => {});
+async function input() {
+  return $global.input();
 }

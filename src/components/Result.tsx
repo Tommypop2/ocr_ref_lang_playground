@@ -47,7 +47,7 @@ export function Result(props: ResultProps) {
   };
   createWorker();
   const runProgram = () => {
-    setOutputs((x) => [...x, "Running program"]);
+    setOutputs((x) => [...x, "Running program main.ocrref...."]);
     (window as Window).resultWorker?.postMessage({ action: "run", data: props.compiledOutput });
     setIsProgramRunning(true);
   };

@@ -21,7 +21,7 @@ const App: Component = () => {
     const res = file[1];
     applyCompilation(res);
   });
-  
+
   return (
     <div class="dark m-0 h-full p-0">
       <div class="dark:text-light-100 m-0 h-full p-0 dark:bg-[#1e1e1e]">
@@ -42,7 +42,11 @@ const App: Component = () => {
           <div class="w-4/10 h-full">
             <div class="h-1/20">
               <button
-                class="h-full w-1/2 bg-gray-500 text-sm font-medium text-gray-100 hover:bg-gray-600"
+                class={
+                  showResult()
+                    ? `h-full w-1/2 border-b border-b-gray-400 bg-gray-700 text-sm font-medium text-gray-100 hover:bg-gray-600`
+                    : `h-full w-1/2 bg-gray-500 text-sm font-medium text-gray-100 hover:bg-gray-600`
+                }
                 onClick={() => {
                   setShowResult(true);
                 }}
@@ -50,7 +54,11 @@ const App: Component = () => {
                 Result
               </button>
               <button
-                class="h-full w-1/2 bg-gray-500 text-sm font-medium text-gray-100 hover:bg-gray-600"
+                class={
+					!showResult()
+					  ? `h-full w-1/2 border-b border-b-gray-400 bg-gray-700 text-sm font-medium text-gray-100 hover:bg-gray-600`
+					  : `h-full w-1/2 bg-gray-500 text-sm font-medium text-gray-100 hover:bg-gray-600`
+				  }
                 onClick={() => {
                   setShowResult(false);
                 }}

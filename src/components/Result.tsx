@@ -17,8 +17,15 @@ export function Result(props: ResultProps) {
     (window as Window).resultWorker = resultWorker;
     resultWorker.onmessage = (e) => {
       if (e.data.action == "print") {
-        const outputStr = e.data.data as string;
-        setOutputs((x) => [...x.slice(-200), outputStr]);
+        let outputArr: string[] = [];
+        const data = e.data.data;
+        if (typeof data == "object") {
+          outputArr.push(JSON.stringify(data));
+        } else {
+          const outputStr = e.data.data as string;
+          outputArr.push(outputStr);
+        }
+        setOutputs((x) => [...x.slice(-200), ...outputArr]);
         outputsDisplay?.scrollTo(0, outputsDisplay.scrollHeight);
       }
       if (e.data.action == "program_terminated") {

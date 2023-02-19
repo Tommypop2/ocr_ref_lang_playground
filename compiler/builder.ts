@@ -56,10 +56,12 @@ function evaluateToken(token: Token): string {
   }
   if (token.type == "while_loop_start") {
     const condition = evaluateToken(token.condition!);
+    astDepth += 1;
     return `while (${condition}){`;
   }
   if (token.type == "if_start") {
     const condition = evaluateToken(token.condition!);
+    astDepth += 1;
     return `if (${condition}){`;
   }
   if (token.type == "else_if") {
@@ -115,9 +117,10 @@ function evaluateToken(token: Token): string {
       argsStr += argStr;
     }
     if (astDepth != 0) {
+      //Also very temporary
       return `await ${name}(${argsStr})`; //Very temp fix
     }
-	return `${name}(${argsStr})`;
+    return `${name}(${argsStr})`;
   }
   if (token.type == "value") {
     return token.value!;

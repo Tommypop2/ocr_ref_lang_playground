@@ -19,7 +19,12 @@ FUNCTION bubbleSort(arr)
     return arr
 END FUNCTION
 FUNCTION main()
-    x = [5,4,3,2,1,0]
+    x = []
+    FOR i = 0 TO 5
+        reallyCool("Enter a number:")
+        number = input()
+        x.push(number)
+    NEXT i
     reallyCool(bubbleSort(x))
 END FUNCTION
 

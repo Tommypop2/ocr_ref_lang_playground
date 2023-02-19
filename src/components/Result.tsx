@@ -108,8 +108,12 @@ export function Result(props: ResultProps) {
         <input
           onkeydown={(e) => {
             if (e.key === "Enter") {
-              (window as Window).resultWorker?.postMessage({ action: "input_data", data: e.currentTarget.value });
-              e.currentTarget.value = "";
+              if (needsInput()) {
+                const text = e.currentTarget.value;
+                (window as Window).resultWorker?.postMessage({ action: "input_data", data: text });
+                e.currentTarget.value = "";
+                setOutputs((prev) => [...prev, "> " + text]);
+              }
               setNeedsInput(false);
             }
           }}

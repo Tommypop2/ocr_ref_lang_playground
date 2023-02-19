@@ -102,6 +102,7 @@ export function Result(props: ResultProps) {
           onkeydown={(e) => {
             if (e.key === "Enter") {
               (window as Window).resultWorker?.postMessage({ action: "input_data", data: e.currentTarget.value });
+              e.currentTarget.value = "";
               setNeedsInput(false);
             }
           }}

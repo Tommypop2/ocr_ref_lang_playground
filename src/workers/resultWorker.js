@@ -1,5 +1,4 @@
 onmessage = async (e) => {
-  console.log(e);
   if (e.data.action === "run") {
     const data = e.data.data;
     var $global = {

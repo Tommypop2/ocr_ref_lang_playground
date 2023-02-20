@@ -66,9 +66,11 @@ function evaluateToken(token: Token): string {
   }
   if (token.type == "else_if") {
     const condition = evaluateToken(token.condition!);
+    removeUnscopedVars(astDepth - 1);
     return `}else if (${condition}){`;
   }
   if (token.type == "else") {
+    removeUnscopedVars(astDepth - 1);
     return `}else {`;
   }
   if (token.type == "variable_assignment_indexed") {

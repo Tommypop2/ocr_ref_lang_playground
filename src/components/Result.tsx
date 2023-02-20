@@ -1,4 +1,4 @@
-import { createEffect, createSignal, For, onCleanup, onMount, Show } from "solid-js";
+import { createSignal, For, onCleanup, onMount, Show } from "solid-js";
 
 interface ResultProps {
   compiledOutput: string;
@@ -13,7 +13,7 @@ export function Result(props: ResultProps) {
   const [needsInput, setNeedsInput] = createSignal(false);
   let outputsDisplay: HTMLDivElement | undefined;
   const createWorker = () => {
-    const resultWorker = new Worker(new URL("../workers/resultWorker.js", import.meta.url), { type: "module" });
+    const resultWorker = new Worker(new URL("../workers/resultWorker.ts", import.meta.url), { type: "module" });
     (window as Window).resultWorker = resultWorker;
     resultWorker.onmessage = (e) => {
       if (e.data.action == "print") {

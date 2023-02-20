@@ -1,14 +1,17 @@
-import { createSignal, For, onCleanup, onMount, Show } from "solid-js";
+import { throttle } from "@solid-primitives/scheduled";
+import { createEffect, createSignal, For, onCleanup, onMount, Setter, Show } from "solid-js";
 
 interface ResultProps {
   compiledOutput: string;
+  rerunOnChanges: boolean;
+  outputs: string[];
+  setOutputs: Setter<string[]>;
 }
 
 interface Window extends globalThis.Window {
   resultWorker?: Worker;
 }
 export function Result(props: ResultProps) {
-  const [outputs, setOutputs] = createSignal<string[]>([]);
   const [isProgramRunning, setIsProgramRunning] = createSignal(false);
   const [needsInput, setNeedsInput] = createSignal(false);
   let outputsDisplay: HTMLDivElement | undefined;
@@ -25,7 +28,7 @@ export function Result(props: ResultProps) {
           const outputStr = e.data.data as string;
           outputArr.push(outputStr);
         }
-        setOutputs((x) => [...x.slice(-200), ...outputArr]);
+        props.setOutputs((x) => [...x.slice(-200), ...outputArr]);
         outputsDisplay?.scrollTo(0, outputsDisplay.scrollHeight);
       }
       if (e.data.action == "program_terminated") {
@@ -45,15 +48,26 @@ export function Result(props: ResultProps) {
     terminateWorker();
     createWorker();
   };
-  createWorker();
   const runProgram = () => {
-    setOutputs((x) => [...x, "Running program main.ocrref...."]);
+    props.setOutputs((x) => [...x, "Running program 'main.ocrref'...."]);
     (window as Window).resultWorker?.postMessage({ action: "run", data: props.compiledOutput });
     setIsProgramRunning(true);
   };
-  onMount(() => {
+  const reRunProgram = throttle(() => {
+    restartWorker();
     runProgram();
+  }, 300);
+  createEffect(() => {
+    console.log(props.compiledOutput.replace(props.compiledOutput, ""));
+    console.log(props.rerunOnChanges);
+    if (props.rerunOnChanges === true) {
+      reRunProgram();
+    }
   });
+  // createWorker();
+  // onMount(() => {
+  //   runProgram();
+  // });
   onCleanup(() => {
     (window as Window).resultWorker?.terminate();
   });
@@ -76,6 +90,7 @@ export function Result(props: ResultProps) {
           <button
             class="w-18 flex h-10 justify-center rounded bg-gray-600 text-center"
             onClick={() => {
+              props.setOutputs((prev) => [...prev, "Program 'main.ocrref' terminated"]);
               restartWorker();
             }}
           >
@@ -86,14 +101,14 @@ export function Result(props: ResultProps) {
         <button
           class="w-18 flex h-10 justify-center rounded bg-gray-600 text-center"
           onClick={() => {
-            setOutputs([]);
+            props.setOutputs([]);
           }}
         >
           Clear
         </button>
       </div>
       <div class="h-9/10 w-full flex-col overflow-y-scroll" ref={outputsDisplay}>
-        <For each={outputs()}>
+        <For each={props.outputs}>
           {(item, index) => {
             return (
               <div>
@@ -112,7 +127,7 @@ export function Result(props: ResultProps) {
                 const text = e.currentTarget.value;
                 (window as Window).resultWorker?.postMessage({ action: "input_data", data: text });
                 e.currentTarget.value = "";
-                setOutputs((prev) => [...prev, "> " + text]);
+                props.setOutputs((prev) => [...prev, "> " + text]);
               }
               setNeedsInput(false);
             }

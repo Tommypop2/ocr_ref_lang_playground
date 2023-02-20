@@ -2,14 +2,22 @@ import { Component, createEffect, createSignal, Show } from "solid-js";
 import mainOCRREF from "../defaultFiles/main.ocrref?raw";
 import { throttle } from "@solid-primitives/scheduled";
 import { Editors } from "./Editors";
+import { storeData, loadData } from "../helpers/data_storage";
 const App: Component = () => {
   const [isDarkTheme, setIsDarkTheme] = createSignal(true);
-  const [showResult, setShowResult] = createSignal(false);
+  const [outputTab, setOutputTab] = createSignal(0);
   const [jsEditorVal, setJsEditorVal] = createSignal("");
-  const [ocrEditorVal, setOcrEditorVal] = createSignal(mainOCRREF);
+  let initVal = loadData("code_value");
+  if (initVal == undefined) {
+    initVal = mainOCRREF;
+  }
+  const [ocrEditorVal, setOcrEditorVal] = createSignal(initVal);
 
   const applyCompilation = throttle(async (res: string) => {
     setJsEditorVal(res);
+  }, 250);
+  const updateStorage = throttle(async (str: string) => {
+    storeData("code_value", str);
   }, 250);
   const resultWorker = new Worker(new URL("../workers/compilerWorker.ts", import.meta.url), { type: "module" });
   resultWorker.onmessage = (evt) => {
@@ -22,6 +30,7 @@ const App: Component = () => {
     }
   };
   createEffect(() => {
+    updateStorage(ocrEditorVal());
     resultWorker.postMessage({ action: "compile", data: [["main", ocrEditorVal()]] });
   });
   return (
@@ -34,15 +43,16 @@ const App: Component = () => {
           setOcrEditorVal={(str: string) => {
             setOcrEditorVal(str);
           }}
-          showResult={showResult()}
-          setShowResult={(x: boolean) => {
-            setShowResult(x);
+          setOutputTab={(x: number) => {
+            setOutputTab(x);
           }}
+          outputTab={outputTab()}
           jsEditorVal={jsEditorVal()}
           setJsEditorVal={(str: string) => {
             setJsEditorVal(str);
           }}
         ></Editors>
+        
       </div>
     </div>
   );

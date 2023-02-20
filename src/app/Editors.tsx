@@ -1,20 +1,37 @@
-import { Accessor, createEffect, Show } from "solid-js";
+import { Accessor, createEffect, createSignal, Show } from "solid-js";
 import { Editor } from "../components/Editor";
 import { Result } from "../components/Result";
+import { arrowPath, trash, noSymbol } from "solid-heroicons/outline";
+import { Icon } from "solid-heroicons";
+import mainOCRREF from "../defaultFiles/main.ocrref?raw";
+
 interface EditorsProps {
   isDarkTheme: boolean;
   ocrEditorVal: string;
   setOcrEditorVal: (str: string) => void;
-  showResult: boolean;
-  setShowResult: (x: boolean) => void;
+  outputTab: number;
+  setOutputTab: (x: number) => void;
   jsEditorVal: string;
   setJsEditorVal: (str: string) => void;
 }
 export function Editors(props: EditorsProps) {
+  const [rerun, setRerun] = createSignal(false);
+  const [outputs, setOutputs] = createSignal<string[]>([]);
   return (
     <div class="h-19/20 flex flex-row">
       <div class="w-6/10 h-full">
-        <div class="h-1/20"></div>
+        <div class="h-1/20 flex-row">
+          <button
+            class="ml-auto cursor-pointer justify-end space-x-2 px-2 py-2"
+            onclick={() => {
+              setOutputs([]);
+              props.setOcrEditorVal(mainOCRREF);
+            }}
+          >
+            <Icon path={trash} class="h-5" />
+            <span class="sr-only">Reset Editor</span>
+          </button>
+        </div>
         <div class="h-19/20">
           <Editor
             isDarkTheme={props.isDarkTheme}
@@ -28,25 +45,33 @@ export function Editors(props: EditorsProps) {
       <div class="w-4/10 h-full">
         <div class="h-1/20">
           <button
+            class="w-2/16 transition duration-300 ease-linear"
+            onclick={() => {
+              setRerun((prev) => !prev);
+            }}
+          >
+            <Icon path={rerun() ? arrowPath : noSymbol} class="h-6"></Icon>
+          </button>
+          <button
             class={
-              props.showResult
-                ? `h-full w-1/2 border-b border-b-gray-400 bg-gray-700 text-sm font-medium text-gray-100 hover:bg-gray-600`
-                : `h-full w-1/2 bg-gray-500 text-sm font-medium text-gray-100 hover:bg-gray-600`
+              props.outputTab == 0
+                ? `w-7/16 h-full border-b border-b-gray-400 bg-gray-700 text-sm font-medium text-gray-100 hover:bg-gray-600`
+                : `w-7/16 h-full bg-gray-500 text-sm font-medium text-gray-100 hover:bg-gray-600`
             }
             onClick={() => {
-              props.setShowResult(true);
+              props.setOutputTab(0);
             }}
           >
             Result
           </button>
           <button
             class={
-              !props.showResult
-                ? `h-full w-1/2 border-b border-b-gray-400 bg-gray-700 text-sm font-medium text-gray-100 hover:bg-gray-600`
-                : `h-full w-1/2 bg-gray-500 text-sm font-medium text-gray-100 hover:bg-gray-600`
+              props.outputTab == 1
+                ? `w-7/16 h-full border-b border-b-gray-400 bg-gray-700 text-sm font-medium text-gray-100 hover:bg-gray-600`
+                : `w-7/16 h-full bg-gray-500 text-sm font-medium text-gray-100 hover:bg-gray-600`
             }
             onClick={() => {
-              props.setShowResult(false);
+              props.setOutputTab(1);
             }}
           >
             Output
@@ -54,7 +79,7 @@ export function Editors(props: EditorsProps) {
         </div>
         <div class="h-19/20">
           <Show
-            when={props.showResult}
+            when={props.outputTab == 0}
             fallback={
               <Editor
                 isDarkTheme={props.isDarkTheme}
@@ -66,7 +91,12 @@ export function Editors(props: EditorsProps) {
               ></Editor>
             }
           >
-            <Result compiledOutput={props.jsEditorVal}></Result>
+            <Result
+              compiledOutput={props.jsEditorVal}
+              rerunOnChanges={rerun()}
+              outputs={outputs()}
+              setOutputs={setOutputs}
+            ></Result>
           </Show>
         </div>
       </div>

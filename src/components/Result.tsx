@@ -1,6 +1,7 @@
 import { throttle } from "@solid-primitives/scheduled";
-import { createEffect, createSignal, For, onCleanup, onMount, Setter, Show } from "solid-js";
-
+import { createEffect, createSignal, For, onCleanup, Setter, Show } from "solid-js";
+import { play, stop, trash } from "solid-heroicons/outline";
+import { Icon } from "solid-heroicons";
 interface ResultProps {
   compiledOutput: string;
   rerunOnChanges: boolean;
@@ -50,6 +51,9 @@ export function Result(props: ResultProps) {
   };
   const runProgram = () => {
     props.setOutputs((x) => [...x, "Running program 'main.ocrref'...."]);
+    if ((window as Window).resultWorker == undefined) {
+      createWorker();
+    }
     (window as Window).resultWorker?.postMessage({ action: "run", data: props.compiledOutput });
     setIsProgramRunning(true);
   };
@@ -58,8 +62,7 @@ export function Result(props: ResultProps) {
     runProgram();
   }, 300);
   createEffect(() => {
-    console.log(props.compiledOutput.replace(props.compiledOutput, ""));
-    console.log(props.rerunOnChanges);
+    props.compiledOutput.toString();
     if (props.rerunOnChanges === true) {
       reRunProgram();
     }
@@ -73,46 +76,40 @@ export function Result(props: ResultProps) {
   });
   return (
     <div class="flex-column h-full w-full justify-center">
-      <div class="absolute right-12">
-        <Show
-          when={isProgramRunning()}
-          fallback={
-            <button
-              class="w-18 flex h-10 justify-center rounded bg-gray-600 text-center"
-              onClick={() => {
-                runProgram();
-              }}
-            >
-              Run
-            </button>
-          }
-        >
-          <button
-            class="w-18 flex h-10 justify-center rounded bg-gray-600 text-center"
-            onClick={() => {
+      <div class="absolute right-2.5 overflow-hidden">
+        <button
+          class="flex h-14 w-16 justify-center bg-gray-600 text-center"
+          onClick={() => {
+            if (isProgramRunning()) {
               props.setOutputs((prev) => [...prev, "Program 'main.ocrref' terminated"]);
               restartWorker();
-            }}
-          >
-            Terminate
-          </button>
-        </Show>
+              return;
+            }
+            runProgram();
+          }}
+          title={isProgramRunning() ? "Terminate" : "Run"}
+        >
+          <Icon path={isProgramRunning() ? stop : play} class="h-full"></Icon>
+        </button>
 
         <button
-          class="w-18 flex h-10 justify-center rounded bg-gray-600 text-center"
+          class="flex h-14 w-16 justify-center rounded-bl-2xl bg-gray-600 text-center"
           onClick={() => {
             props.setOutputs([]);
           }}
+          title="Clear"
         >
-          Clear
+          <Icon path={trash} class="h-full"></Icon>
         </button>
       </div>
-      <div class="h-9/10 w-full flex-col overflow-y-scroll" ref={outputsDisplay}>
+      <div class="h-9/10 customScrollBar w-full flex-col overflow-y-scroll" ref={outputsDisplay}>
         <For each={props.outputs}>
           {(item, index) => {
             return (
               <div>
-                <span class="m-0 h-full select-none p-0 text-gray-500">{index() + 1}</span>
+                <span class="relative m-0 inline-block h-full w-4 select-none p-0 text-right text-gray-500">
+                  {index() + 1}
+                </span>
                 <span class="m-l-3">{item}</span>
               </div>
             );

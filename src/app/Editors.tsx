@@ -1,9 +1,10 @@
-import { Accessor, createEffect, createSignal, Show } from "solid-js";
+import { createSignal, Show } from "solid-js";
 import { Editor } from "../components/Editor";
 import { Result } from "../components/Result";
 import { arrowPath, trash, noSymbol } from "solid-heroicons/outline";
 import { Icon } from "solid-heroicons";
 import mainOCRREF from "../defaultFiles/main.ocrref?raw";
+import Tabs from "../components/Tabs";
 
 interface EditorsProps {
   isDarkTheme: boolean;
@@ -20,13 +21,17 @@ export function Editors(props: EditorsProps) {
   return (
     <div class="h-19/20 flex flex-row">
       <div class="w-6/10 h-full">
-        <div class="h-1/20 flex-row">
+        <div class="h-1/20 flex flex-row">
+          <div class="ml-16 h-full">
+            <Tabs tabs={[{ name: "main.ocrref", value: "" }]} setTabs={() => {}}></Tabs>
+          </div>
           <button
-            class="ml-auto cursor-pointer justify-end space-x-2 px-2 py-2"
+            class="ml-auto block cursor-pointer justify-end space-x-2 px-2 py-2"
             onclick={() => {
               setOutputs([]);
               props.setOcrEditorVal(mainOCRREF);
             }}
+            title="Reset Editor"
           >
             <Icon path={trash} class="h-5" />
             <span class="sr-only">Reset Editor</span>
@@ -43,12 +48,13 @@ export function Editors(props: EditorsProps) {
         </div>
       </div>
       <div class="w-4/10 h-full">
-        <div class="h-1/20">
+        <div class="h-1/20 flex flex-row">
           <button
             class="w-2/16 transition duration-300 ease-linear"
             onclick={() => {
               setRerun((prev) => !prev);
             }}
+            title={rerun() ? "Stop auto reloading" : "Start auto reloading"}
           >
             <Icon path={rerun() ? arrowPath : noSymbol} class="h-6"></Icon>
           </button>

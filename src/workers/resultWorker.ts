@@ -18,7 +18,7 @@ onmessage = async (e) => {
         return data;
       },
     };
-    console.log($global.toString().replace($global.toString(), ""));
+    $global.toString();
     const res = eval(data);
     res.then((e: any) => {
       postMessage({ action: "program_terminated" });

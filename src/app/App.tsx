@@ -3,6 +3,7 @@ import mainOCRREF from "../defaultFiles/main.ocrref?raw";
 import { throttle } from "@solid-primitives/scheduled";
 import { Editors } from "./Editors";
 import { storeData, loadData } from "../helpers/data_storage";
+import { Header } from "../components/Header";
 const App: Component = () => {
   const [isDarkTheme, setIsDarkTheme] = createSignal(true);
   const [outputTab, setOutputTab] = createSignal(0);
@@ -36,7 +37,9 @@ const App: Component = () => {
   return (
     <div class="dark m-0 h-full p-0">
       <div class="dark:text-light-100 m-0 h-full p-0 dark:bg-[#1e1e1e]">
-        <header class="h-1/20 px-6 py-3 text-4xl">OCR Reference Language Playground</header>
+        <div>
+          <Header />
+        </div>
         <Editors
           isDarkTheme={isDarkTheme()}
           ocrEditorVal={ocrEditorVal()}
@@ -52,7 +55,6 @@ const App: Component = () => {
             setJsEditorVal(str);
           }}
         ></Editors>
-        
       </div>
     </div>
   );

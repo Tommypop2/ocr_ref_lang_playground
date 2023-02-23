@@ -11,10 +11,21 @@ interface EditorProps {
 }
 export function Editor(props: EditorProps) {
   let container: HTMLDivElement | undefined;
+  let currentEditor: monaco.editor.IStandaloneCodeEditor | undefined;
+  const model = monaco.editor.createModel(props.value, props.language);
+
   createEffect(() => {
     monaco.editor.setTheme(props.isDarkTheme ? "vs-dark" : "vs");
   });
-
+  createEffect(() => {
+    if (props.value != currentEditor?.getValue()) {
+      currentEditor?.setValue(props.value);
+      currentEditor?.getAction("editor.action.formatDocument")?.run();
+    }
+  });
+  setTimeout(() => {
+    currentEditor?.getAction("editor.action.formatDocument")?.run();
+  }, 50);
   onMount(() => {
     self.MonacoEnvironment = {
       getWorker(_, label) {
@@ -24,23 +35,20 @@ export function Editor(props: EditorProps) {
         return new editorWorker();
       },
     };
-    const currentEditor = monaco.editor.create(container!, {
-      value: props.value,
-      language: props.language,
+    currentEditor = monaco.editor.create(container!, {
+      model: model,
       automaticLayout: true,
     });
-    createEffect(() => {
-      if (props.value != currentEditor.getValue()) {
-        currentEditor.setValue(props.value);
-        currentEditor.getAction("editor.action.formatDocument")?.run();
-      }
-    });
     currentEditor.onDidChangeModelContent(() => {
-      const content = currentEditor.getValue();
+      const content = currentEditor?.getValue();
+      if (content == undefined) {
+        return;
+      }
       props.onContentChange(content);
+      currentEditor?.getAction("editor.action.formatDocument")?.run();
     });
     currentEditor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS, () => {
-      currentEditor.getAction("editor.action.formatDocument")?.run();
+      currentEditor?.getAction("editor.action.formatDocument")?.run();
     });
   });
   return <div class="h-full w-auto" ref={container}></div>;

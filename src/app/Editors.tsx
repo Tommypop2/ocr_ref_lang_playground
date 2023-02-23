@@ -52,7 +52,7 @@ export function Editors(props: EditorsProps) {
       <div class="w-4/10 h-full">
         <div class="h-1/20 flex flex-row">
           <button
-            class="w-2/16 transition duration-300 ease-linear"
+            class="w-2/16"
             onclick={() => {
               setRerun((prev) => !prev);
             }}

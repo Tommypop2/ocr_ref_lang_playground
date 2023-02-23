@@ -12,8 +12,8 @@ interface TabViewProps {
 }
 function TabView(props: TabViewProps) {
   return (
-    <div class="rounded-t-m h-full rounded-t-lg bg-[#3c3c3c] px-2 cursor-pointer">
-      <div class="select-none mt-1 pt-2">{props.tab.name}</div>
+    <div class="rounded-t-m h-full cursor-pointer rounded-t-lg bg-[#6b7280] px-2 dark:bg-[#3c3c3c]">
+      <div class="mt-1 select-none pt-2">{props.tab.name}</div>
     </div>
   );
 }

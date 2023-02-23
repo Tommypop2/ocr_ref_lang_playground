@@ -28,12 +28,14 @@ export function Editors(props: EditorsProps) {
           <button
             class="ml-auto block cursor-pointer justify-end space-x-2 px-2 py-2"
             onclick={() => {
+              const res = confirm("Are you sure you want to reset the editor?");
+              if (!res) return;
               setOutputs([]);
               props.setOcrEditorVal(mainOCRREF);
             }}
             title="Reset Editor"
           >
-            <Icon path={trash} class="h-5" />
+            <Icon path={trash} class="h-7" />
             <span class="sr-only">Reset Editor</span>
           </button>
         </div>
@@ -56,7 +58,7 @@ export function Editors(props: EditorsProps) {
             }}
             title={rerun() ? "Stop auto reloading" : "Start auto reloading"}
           >
-            <Icon path={rerun() ? arrowPath : noSymbol} class="h-6"></Icon>
+            <Icon path={rerun() ? arrowPath : noSymbol} class="h-7"></Icon>
           </button>
           <button
             class={

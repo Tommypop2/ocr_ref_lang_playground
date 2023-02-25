@@ -27,8 +27,8 @@ function isFunctionCall(statement: string) {
 function tokenise_statement(statement: string) {
 	statement = statement.trim();
 	let token: Token = { type: "" };
-	if (statement.startsWith("FUNCTION ")) {
-		statement = statement.replace("FUNCTION ", "");
+	if (statement.startsWith("function ")) {
+		statement = statement.replace("function ", "");
 		token["type"] = "fun_def";
 		const split = statement.split("(");
 		token["name"] = split[0];
@@ -36,36 +36,36 @@ function tokenise_statement(statement: string) {
 			.replace(")", "")
 			.split(",")
 			.map((e) => tokenise_statement(e.trim()));
-	} else if (statement.startsWith("WHILE ")) {
-		statement = statement.replace("WHILE", "").trim();
+	} else if (statement.startsWith("while ")) {
+		statement = statement.replace("while", "").trim();
 		token["type"] = "while_loop_start";
 		token["condition"] = tokenise_statement(
 			statement.replace("(", "").replace(")", "")
 		);
-	} else if (statement.startsWith("FOR ")) {
-		statement = statement.replace("FOR ", "");
+	} else if (statement.startsWith("for ")) {
+		statement = statement.replace("for ", "");
 		token["type"] = "for_loop_start";
-		const conditionStr = statement.split("TO")[0].trim();
+		const conditionStr = statement.split("to")[0].trim();
 		token["initVal"] = tokenise_statement(conditionStr);
-		const endValStr = statement.split("TO")[1].trim();
+		const endValStr = statement.split("to")[1].trim();
 		token["endVal"] = tokenise_statement(endValStr);
-	} else if (statement.startsWith("IF ")) {
-		statement = statement.replace("IF ", "");
+	} else if (statement.startsWith("if ")) {
+		statement = statement.replace("if ", "");
 		const conditionStr = statement.replace("(", "").replace(")", "").trim();
 		const condition = tokenise_statement(conditionStr);
 		token["type"] = "if_start";
 		token["condition"] = condition;
-	} else if (statement.startsWith("ELSE IF ")) {
-		statement = statement.replace("ELSE IF ", "");
+	} else if (statement.startsWith("else if ")) {
+		statement = statement.replace("else if ", "");
 		const conditionStr = statement.replace("(", "").replace(")", "").trim();
 		const condition = tokenise_statement(conditionStr);
 		token["type"] = "else_if";
 		token["condition"] = condition;
-	} else if (statement.startsWith("ELSE")) {
+	} else if (statement.startsWith("else")) {
 		token["type"] = "else";
-	} else if (statement.startsWith("END")) {
+	} else if (statement.startsWith("end")) {
 		token["type"] = "end_block";
-	} else if (statement.startsWith("NEXT")) {
+	} else if (statement.startsWith("next")) {
 		token["type"] = "end_block";
 	} else if (isComparison(statement) != "") {
 		token["type"] = "comparison";

@@ -1,31 +1,31 @@
-FUNCTION reallyCool(x)
+function reallyCool(x)
     print(x)
-END FUNCTION
-FUNCTION bubbleSort(arr)
-    WHILE true
+end function
+function bubbleSort(arr)
+    while true
         swaps = 0
-        FOR i = 0 TO arr.length - 2
-            IF arr[i] > arr[i+1]
+        for i = 0 to arr.length - 2
+            if arr[i] > arr[i+1]
                 temp = arr[i]
                 arr[i] = arr[i+1]
                 arr[i+1] = temp
                 swaps += 1
-            END IF
-        NEXT i
-        IF swaps == 0
+            end if
+        next i
+        if swaps == 0
             break
-        END IF
-    END WHILE
+        end if
+    end while
     return arr
-END FUNCTION
-FUNCTION main()
+end function
+function main()
     x = []
-    FOR i = 0 TO 5
+    for i = 0 to 5
         reallyCool("Enter a number:")
         number = int(input())
         x.push(number)
-    NEXT i
+    next i
     reallyCool(bubbleSort(x))
-END FUNCTION
+end function
 
 main()

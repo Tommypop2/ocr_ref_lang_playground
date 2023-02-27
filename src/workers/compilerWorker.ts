@@ -6,7 +6,7 @@ onmessage = async (evt) => {
     // const data = evt.data.data as string[][];
     const data = evt.data.data;
     const startTime = new Date();
-    const result = await compile(data, stdLibStr);
+    const result = await compile(data);
     const endTime = new Date();
     const elapsedTimeMs = endTime.getMilliseconds() - startTime.getMilliseconds();
     console.log(`Compilation took ${elapsedTimeMs}ms`);

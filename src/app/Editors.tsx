@@ -3,9 +3,9 @@ import { Editor } from "../components/Editor";
 import { Result } from "../components/Result";
 import { arrowPath, trash, noSymbol } from "solid-heroicons/outline";
 import { Icon } from "solid-heroicons";
-import mainOCRREF from "../defaultFiles/main.ocrref?raw";
 import Tabs from "../components/Tabs";
-
+import { useAppContext } from "../providers/StateProvider";
+import defaultTabs from "../defaultFiles/defaultTabs";
 interface EditorsProps {
   isDarkTheme: boolean;
   ocrEditorVal: string;
@@ -16,6 +16,7 @@ interface EditorsProps {
   setJsEditorVal: (str: string) => void;
 }
 export function Editors(props: EditorsProps) {
+  const ctx = useAppContext();
   const [rerun, setRerun] = createSignal(false);
   const [outputs, setOutputs] = createSignal<string[]>([]);
   return (
@@ -23,7 +24,12 @@ export function Editors(props: EditorsProps) {
       <div class="w-6/10 h-full">
         <div class="h-1/20 flex flex-row">
           <div class="ml-16 h-full">
-            <Tabs tabs={[{ name: "main.ocrref", value: "" }]} setTabs={() => {}}></Tabs>
+            <Tabs
+              tabs={ctx.tabs()}
+              setTabs={ctx.setTabs}
+              currentTab={ctx.currentTab()}
+              setCurrentTab={ctx.setCurrentTab}
+            ></Tabs>
           </div>
           <button
             class="ml-auto block cursor-pointer justify-end space-x-2 px-2 py-2"
@@ -31,7 +37,7 @@ export function Editors(props: EditorsProps) {
               const res = confirm("Are you sure you want to reset the editor?");
               if (!res) return;
               setOutputs([]);
-              props.setOcrEditorVal(mainOCRREF);
+              ctx.setTabs(defaultTabs);
             }}
             title="Reset Editor"
           >

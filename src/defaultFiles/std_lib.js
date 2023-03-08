@@ -4,7 +4,7 @@
 // promise. Eventually, the 'Result' window will go inside of an iframe,
 // which should remove this problem, as print and input methods
 // will be able to directly manipulate the DOM
-async function print(data) {
+async function print(...data) {
   $global.log(data);
 }
 async function input() {

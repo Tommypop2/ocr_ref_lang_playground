@@ -22,7 +22,10 @@ export function Result(props: ResultProps) {
     resultWorker.onmessage = (e) => {
       if (e.data.action == "print") {
         let outputArr: string[] = [];
-        const data = e.data.data;
+        let data = e.data.data;
+        if (data.length == 1) {
+          data = data[0]; // Removes square brackets around single outputs
+        }
         if (typeof data == "object") {
           outputArr.push(JSON.stringify(data));
         } else {

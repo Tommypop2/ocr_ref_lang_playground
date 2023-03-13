@@ -108,7 +108,6 @@ function tokenise_statement(statement: string) {
     }
     splits.push(argsStr.substring(lastSplitInd + 1, argsStr.length));
     token["params"] = splits.map((e) => tokenise_statement(e.trim()));
-    console.log(token["params"]);
   } else {
     token["type"] = "value";
     token["value"] = statement;

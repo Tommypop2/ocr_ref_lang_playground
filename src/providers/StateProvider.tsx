@@ -1,5 +1,15 @@
 import { throttle } from "@solid-primitives/scheduled";
-import { Accessor, createContext, createEffect, createSignal, on, ParentComponent, Setter, useContext } from "solid-js";
+import {
+  Accessor,
+  createContext,
+  createEffect,
+  createSignal,
+  equalFn,
+  on,
+  ParentComponent,
+  Setter,
+  useContext,
+} from "solid-js";
 import { loadData, storeData } from "../helpers/data_storage";
 import defaultTabs from "../defaultFiles/defaultTabs";
 interface AppContextType {
@@ -16,7 +26,7 @@ const serialiseTabs = throttle((tabs: Tab[]) => {
 }, 500);
 export const StateProvider: ParentComponent = (props) => {
   const loadedTabs = loadData("tabs");
-  const [tabs, setTabs] = createSignal<Tab[]>(loadedTabs != undefined ? JSON.parse(loadedTabs) : defaultTabs);
+  const [tabs, setTabs] = createSignal<Tab[]>(loadedTabs != undefined ? JSON.parse(loadedTabs) : defaultTabs());
   const [currentTab, setCurrentTab] = createSignal(0);
   createEffect(
     on([tabs, currentTab], () => {

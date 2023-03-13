@@ -13,7 +13,8 @@ const Main: Component = () => {
   const [jsEditorVal, setJsEditorVal] = createSignal("");
   const [ocrEditorVal, setOcrEditorVal] = createSignal(ctx.tabs()[ctx.currentTab()].content);
   createEffect(() => {
-    setOcrEditorVal(ctx.tabs()[ctx.currentTab()].content);
+    const newContent = ctx.tabs()[ctx.currentTab()].content;
+    setOcrEditorVal(newContent);
   });
   //   let initVal = loadData("code_value");
   //   if (initVal == undefined) {
@@ -55,10 +56,6 @@ const Main: Component = () => {
       let tabs = ctx.tabs();
       tabs[ctx.currentTab()].content = ocrEditorVal();
       ctx.setTabs([...tabs]);
-    }),
-  );
-  createEffect(
-    on(ocrEditorVal, () => {
       compile();
     }),
   );

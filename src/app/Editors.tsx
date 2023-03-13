@@ -37,7 +37,7 @@ export function Editors(props: EditorsProps) {
               const res = confirm("Are you sure you want to reset the editor?");
               if (!res) return;
               setOutputs([]);
-              ctx.setTabs(defaultTabs);
+              ctx.setTabs(defaultTabs());
             }}
             title="Reset Editor"
           >

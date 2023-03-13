@@ -24,6 +24,7 @@ export function Result(props: ResultProps) {
         let outputArr: string[] = [];
         let data = e.data.data;
         if (data.length == 1) {
+          //Todo: Make arguments spread into print print as comma separated strings, not as an array
           data = data[0]; // Removes square brackets around single outputs
         }
         if (typeof data == "object") {

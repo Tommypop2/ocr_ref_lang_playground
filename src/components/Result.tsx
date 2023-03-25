@@ -46,15 +46,13 @@ export function Result(props: ResultProps) {
   };
   const terminateWorker = () => {
     (window as Window).resultWorker?.terminate();
+    (window as Window).resultWorker = undefined;
     setIsProgramRunning(false);
     setNeedsInput(false);
   };
-  const restartWorker = () => {
-    terminateWorker();
-    createWorker();
-  };
   const runProgram = () => {
     props.setOutputs((x) => [...x, "Running program 'main.ocrref'...."]);
+    // restartWorker();
     if ((window as Window).resultWorker == undefined) {
       createWorker();
     }
@@ -62,7 +60,7 @@ export function Result(props: ResultProps) {
     setIsProgramRunning(true);
   };
   const reRunProgram = throttle(() => {
-    restartWorker();
+    terminateWorker();
     runProgram();
   }, 300);
   createEffect(() => {
@@ -86,9 +84,10 @@ export function Result(props: ResultProps) {
           onClick={() => {
             if (isProgramRunning()) {
               props.setOutputs((prev) => [...prev, "Program 'main.ocrref' terminated"]);
-              restartWorker();
+              terminateWorker();
               return;
             }
+            console.log((window as Window).resultWorker);
             runProgram();
           }}
           title={isProgramRunning() ? "Terminate" : "Run"}

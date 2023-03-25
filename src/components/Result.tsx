@@ -124,7 +124,7 @@ export function Result(props: ResultProps) {
           onkeydown={(e) => {
             if (e.key === "Enter") {
               if (!needsInput()) {
-                e.currentTarget.value = "";
+                // e.currentTarget.value = "";
                 return;
               }
               const text = e.currentTarget.value;

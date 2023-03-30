@@ -69,10 +69,6 @@ export function Result(props: ResultProps) {
       reRunProgram();
     }
   });
-  // createWorker();
-  // onMount(() => {
-  //   runProgram();
-  // });
   onCleanup(() => {
     (window as Window).resultWorker?.terminate();
   });
@@ -87,7 +83,6 @@ export function Result(props: ResultProps) {
               terminateWorker();
               return;
             }
-            console.log((window as Window).resultWorker);
             runProgram();
           }}
           title={isProgramRunning() ? "Terminate" : "Run"}

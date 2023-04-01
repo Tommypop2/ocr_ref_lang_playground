@@ -71,6 +71,7 @@ export function Result(props: ResultProps) {
   });
   onCleanup(() => {
     (window as Window).resultWorker?.terminate();
+    (window as Window).resultWorker = undefined;
   });
   return (
     <div class="flex-column h-full w-full justify-center">

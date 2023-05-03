@@ -7,7 +7,8 @@
 async function print(...data) {
   $global.log(data);
 }
-async function input() {
+async function input(prompt) {
+  if (prompt) $global.log(prompt);
   return $global.input();
 }
 // Casts

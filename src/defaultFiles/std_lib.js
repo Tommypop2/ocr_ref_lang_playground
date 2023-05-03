@@ -21,6 +21,9 @@ async function int(data) {
 async function float(data) {
   return parseFloat(data);
 }
+async function real(data) {
+  return float(data);
+}
 async function bool(data) {
   return data == true;
 }
